@@ -9,6 +9,7 @@ import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import ReleaseTicket from "./ReleaseTicket";
 import { Ticket } from "lucide-react";
+import { createStripeCheckoutSession } from "@/actions/createStripeCheckoutSession";
 
 export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
   const router = useRouter();
@@ -51,24 +52,24 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
     return () => clearInterval(interval);
   }, [offerExpiresAt, isExpired]);
 
-  // const handlePurchase = async () => {
-  //   if (!user) return;
+  const handlePurchase = async () => {
+    if (!user) return;
 
-  //   try {
-  //     setIsLoading(true);
-  //     const { sessionUrl } = await createStripeCheckoutSession({
-  //       eventId,
-  //     });
+    try {
+      setIsLoading(true);
+      const { sessionUrl } = await createStripeCheckoutSession({
+        eventId,
+      });
 
-  //     if (sessionUrl) {
-  //       router.push(sessionUrl);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error creating checkout session:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+      if (sessionUrl) {
+        router.push(sessionUrl);
+      }
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!user || !queuePosition || queuePosition.status !== "offered") {
     return null;
@@ -101,7 +102,7 @@ export default function PurchaseTicket({ eventId }: { eventId: Id<"events"> }) {
         </div>
 
         <button
-          // onClick={handlePurchase}
+          onClick={handlePurchase}
           disabled={isExpired || isLoading}
           className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white px-8 py-4 rounded-lg font-bold shadow-md hover:from-amber-600 hover:to-amber-700 transform hover:scale-[1.02] transition-all duration-200 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed disabled:hover:scale-100 text-lg"
         >
