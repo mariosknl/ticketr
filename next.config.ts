@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         hostname: "efficient-goshawk-493.convex.cloud",
         protocol: "https",
       },
+      {
+        hostname: "wonderful-rook-890.convex.cloud",
+        protocol: "https",
+      },
     ],
   },
 };
